@@ -1,0 +1,68 @@
+Modify Prompt :
+
+Task was provided to me where a use case and a initial prompt will be provided for me. I need to analyze the use case and the prompt. Need to check whether the given prompt will align with the given difficulty level or not and whether the given prompt satisfies the use case or not.The below is the use case and the prompt I provided for you. Analyze both the use case and the prompt. Check whether the prompt correctly satisfies the given use case or not. Check whether the prompt is well structured or not. If the given prompt does not align with the given use case or the given difficulty level, then change the prompt and give me the updated prompt. if the difficulty is easy, the requirements/constraints should be no more than 3. Hard: 8+ Medium: 4-7 Easy: 2-3 keep in mind that the prompt should break the model. and make sure if you update the prompt the prompt should be solvable
+model breaking means the prompt should be difficult so model wont able to accurate solution or will fail to follow the instructions. so analyse the below provided information according to that provide me the updated prompt. main thing the prompt shuold need to 100 % related to the usecase and should nee tosatisfy use case.
+If the use case is not satisfying the usecase the modify the prompt 
+
+
+The below are few details describing how the prompt should look 
+
+Prompt
+1. Scaffolding & Structure:  
+    * Begin by checking whether the scaffolding or structural skeleton of the code is present.
+    * If it is missing, your first priority is to add it to ensure clarity and completeness.
+    * Avoid asking test cases in your prompt.  
+2. Hard Constraints:  
+    * Explicitly include any hard constraints in the prompt (e.g., data size limits, performance bounds, expected formats).  
+3. Sample Input & Output:  
+    * Sample input/output examples
+4. Language:
+    * The prompt must be written in clear, natural human language not AI-generated.
+
+    5. If the prompt contains any unrealistic things or unsolvable things then remove themfrom the prompt.
+
+Below is the usecase :
+
+Use Case
+
+Create an optimized matplotlib-based solution for healthcare systems in the Visualization domain
+
+
+Below is the prompt :
+
+In modern healthcare systems, engineers face the challenge of efficiently processing and visualizing vast amounts of data in real-time. This scenario requires the implementation of advanced optimization algorithms, particularly when dealing with Particle Swarm Optimization (PSO) for dynamic visualization tasks. The ability to visualize optimization results in real-time presents significant challenges, as it requires careful consideration of system performance and scalability, especially when handling datasets ranging from 10^6 to 10^9 elements. 
+
+To tackle this problem, you are tasked with designing a Python-based solution using matplotlib that enables real-time visualization of particle swarm optimization processes. This solution not only facilitates the understanding of how particles converge towards optimal solutions but also supports the swift rendering of updates as the optimization algorithm iterates. 
+
+### Objectives
+1. **Design** a scalable system architecture capable of processing datasets of size 10^6 to 10^9, ensuring efficient data flow and resource utilization.
+2. **Implement** a real-time Particle Swarm Optimization algorithm that operates with a time complexity of O(log n) or better, optimizing its performance for large-scale data processing.
+3. **Develop** a robust visualization module using matplotlib to graphically represent the evolution of particles over multiple iterations.
+4. **Create** interactive elements within the visualization that allow users to pause, resume, and control the speed of the animation to better analyze the optimization process.
+5. **Build** a mechanism to update the visualization in real-time without significant lag, ensuring that the system can handle high-frequency updates efficiently.
+6. **Optimize** the rendering pipeline to minimize CPU and memory usage, thereby enhancing the system's responsiveness and stability.
+7. **Engineer** a user-friendly interface that integrates seamlessly with existing healthcare data systems, enabling effortless integration and deployment.
+
+### Constraints
+- **Performance Requirements**: The solution must process updates and render frames with minimal latency, maintaining an average frame refresh rate suitable for real-time interaction.
+- **Scale Limitations**: The system should efficiently handle input datasets sized between 10^6 to 10^9 elements without performance degradation.
+- **Library-Specific Constraints**: The matplotlib library must be utilized for all visualization tasks, and any additional libraries used must be compatible with matplotlib and the overall healthcare system's architecture.
+
+### Function Signature
+```python
+def visualize_pso_real_time(data_stream, num_particles, max_iterations, update_interval) -> None:
+    pass
+```
+
+### Sample Input/Output
+- **Sample Input**: A data stream representing the initial positions and velocities of particles, `num_particles = 1000`, `max_iterations = 500`, `update_interval = 0.1 seconds`.
+- **Sample Output**: A real-time matplotlib plot showing particles converging over time, with controls to interact with the visualization.
+
+### Expected Output Format
+- The output should be a dynamic matplotlib window that updates in real-time, featuring:
+  - A scatter plot showing the positions of particles.
+  - Annotations indicating the best-known position or solution found so far.
+  - Interactive controls for pausing, resuming, and adjusting the visualization speed.
+  - A user-friendly interface that displays iteration count, convergence metrics, and computational performance statistics.
+  
+How well the prompt is aligning with the project requirements on mark of 100.

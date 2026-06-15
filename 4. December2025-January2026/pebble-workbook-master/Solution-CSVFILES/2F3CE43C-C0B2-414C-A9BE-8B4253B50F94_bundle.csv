@@ -1,0 +1,125 @@
+"id","language","prompt","solution","test"
+"2F3CE43C-C0B2-414C-A9BE-8B4253B50F94","java","```java
+public class FindPeek
+{
+    /*
+        Implement a ternary search algorithm to find the peak value in the unimodal function within a given range.
+
+       A range in the array from starting to ending range will be provided and need to find a peek in that range. Peek is the value that before the peek all values are in increasing order and after the peak, the values are in decreasing order.
+
+     Handle all edges of the problem like empty arrays and invalid arrays accurately. It should return -1 for all such different cases.
+
+       @param array[]: An unimodal array.
+       @ param l: The starting index of the search range. 
+       @ param r: The ending index of the search range.
+        Returns:
+        The function should return the peek element in an unimodal array.
+
+         For Example :
+                 
+     */
+   public int ternarySearch(int array[] , int l , int r)
+  {
+     
+   }
+}
+```","public class Solution {
+    
+    public int ternarySearch(int array[], int l, int r) {
+        if (array == null || array.length == 0 || l > r) {
+            return -1;
+        }
+
+        while (l <= r) {
+            if (l == r) {
+                return array[l]; 
+            }
+
+            int mid1 = l + (r - l) / 3;
+            int mid2 = r - (r - l) / 3;
+
+            if ((mid1 == 0 || array[mid1] > array[mid1 - 1]) &&
+                (mid1 == array.length - 1 || array[mid1] > array[mid1 + 1])) {
+                return array[mid1];
+            }
+
+            if ((mid2 == 0 || array[mid2] > array[mid2 - 1]) &&
+                (mid2 == array.length - 1 || array[mid2] > array[mid2 + 1])) {
+                return array[mid2];
+            }
+
+            if (array[mid1] < array[mid1 + 1]) {
+                l = mid1 + 1;
+            } else {
+                r = mid2 - 1;
+            }
+        }
+
+        return -1;
+    }
+}","import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class SolutionTest { // Renamed the class
+
+    private final Solution sol = new Solution();
+
+    @Test
+    void testBasicUnimodalArray() {
+        int[] arr1 = {1, 3, 5, 7, 6, 4, 2};
+        assertEquals(7, sol.ternarySearch(arr1, 0, arr1.length - 1));
+    }
+
+    @Test
+    void testLargeArrayWithPeakInMiddle() {
+        int[] arr2 = {10, 20, 30, 50, 100, 90, 70, 50, 30, 10};
+        assertEquals(100, sol.ternarySearch(arr2, 0, arr2.length - 1));
+    }
+
+    @Test
+    void testSingleElement() {
+        int[] arr3 = {5};
+        assertEquals(5, sol.ternarySearch(arr3, 0, arr3.length - 1));
+    }
+
+    @Test
+    void testEmptyArray() {
+        int[] arr4 = {};
+        assertEquals(-1, sol.ternarySearch(arr4, 0, arr4.length - 1)); // Ensure ternarySearch handles empty input
+    }
+
+    @Test
+    void testTwoElementsIncreasing() {
+        assertEquals(5, sol.ternarySearch(new int[]{3, 5}, 0, 1));
+    }
+
+    @Test
+    void testTwoElementsDecreasing() {
+        assertEquals(5, sol.ternarySearch(new int[]{5, 3}, 0, 1));
+    }
+
+    @Test
+    void testThreeElementsPeakInMiddle() {
+        assertEquals(5, sol.ternarySearch(new int[]{1, 5, 2}, 0, 2));
+    }
+
+    @Test
+    void testLargeArrayWithPeakAtStart() {
+        assertEquals(20, sol.ternarySearch(new int[]{20, 18, 10, 5, 2}, 0, 4));
+    }
+
+    @Test
+    void testStrictlyIncreasingArray() {
+        assertEquals(5, sol.ternarySearch(new int[]{1, 2, 3, 4, 5}, 0, 4));
+    }
+
+    @Test
+    void testLargeArrayWithWidePeak() {
+        assertEquals(20, sol.ternarySearch(new int[]{1, 3, 7, 12, 15, 20, 20, 19, 18, 10, 5, 2}, 0, 11));
+    }
+
+    @Test
+    void testInvalidRange() {
+        assertEquals(-1, sol.ternarySearch(new int[]{1, 2, 3, 4, 5}, 3, 2)); // Ensure method handles invalid range
+    }
+}"

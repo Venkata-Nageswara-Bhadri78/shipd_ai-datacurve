@@ -1,0 +1,136 @@
+"id","language","prompt","solution","test"
+"0b99fcdf-b3fa-49e5-919a-c7bea19f4f9c","java","```java
+import java.util.*;
+
+class  Solution{
+    /*
+      You are allowed to perform few operations on given two string string_1 and string_2 (consists only lowercase alphabets).
+      Choose an index i (0 <= i < string_1.length()) - insert a new character(must be different from i^th character) immediate after the i^th character.
+      Find whether it is possible to convert the string_1 into string_2 by performing above operation any number of times of your choice.
+
+      Input Format:
+      string_1    -   String  -   First String
+      string_2    -   String  -   Second String
+
+      Output Format:
+      true/false  -   boolean -   Return true if it is possible to convert string_1 into string_2, false if not possible.
+
+      Example:
+
+      Input:
+      string_1 : shambu
+      string_2 : sabu
+
+      Output: true
+
+      Explanation:
+      Insert 'h' at index 1 then the String becomes - shabu
+      Insert 'm' at index 3 then the String becomes - shambu
+      Hence string_1 and string_2 are same - return true
+
+      Example 2:
+      Input: 
+      string_1 : lambuuu
+      string_2 : lambu
+
+      Output: false
+
+      Explanation:
+      Inserting the same character as previous is not allowed. Hence it is not possible to convert string_1 into string_2.
+
+      Constraints:
+      - 1<= string_1.length(), string_2.length() <= 10^6
+      - string_1.length() <= string_2.length()
+      - Both string must contains only lowercase english letters.
+    */
+    
+    public boolean check_for_subsequence(String string_1, String string_2){
+    
+    }
+}
+```","import java.util.*;
+
+class Solution {
+	public boolean check_for_subsequence(String string_1, String string_2){
+		int i=0, j=0;
+		
+		while(i < string_1.length() && j<string_2.length()){
+			if(string_1.charAt(i) == string_2.charAt(j)){
+				i++;
+			}
+			j++;
+		}
+		
+		return i == string_1.length();
+	}
+	public boolean isPossible(String string_1, String string_2) {
+		int count_1 = 0;
+		int count_2 = 0;
+		
+		for(int i=1 ; i<string_1.length() ; i++){
+			if(string_1.charAt(i)==string_2.charAt(i-1)){
+				count_1++;
+			}
+			else{
+				break;
+			}
+		}
+		for(int i=1 ; i<string_2.length() ; i++){
+			if(string_2.charAt(i) == string_2.charAt(i-1)){
+				count_2++;
+			}
+			else{
+				break;
+			}
+		}
+		if(count_1 < count_2){
+			return false;
+		}
+		if(check_for_subsequence(string_1, string_2)){
+			return true;
+		}
+		return false;
+	}
+}","import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+class Test {
+
+    Solution solution = new Solution();
+    
+    @Test
+    void testBasicCases() {
+        assertTrue(solution.isPossible(""abc"", ""ahbgdc""), ""Basic subsequence check failed"");
+        assertFalse(solution.isPossible(""axc"", ""ahbgdc""), ""Non-subsequence check failed"");
+    }
+
+    @Test
+    void testEdgeCases() {
+        assertTrue(solution.isPossible("""", ""ahbgdc""), ""Empty s should always return true"");
+        assertTrue(solution.isPossible("""", """"), ""Both strings empty should return true"");
+        assertTrue(solution.isPossible(""a"", ""a""), ""Single character matching"");
+        assertFalse(solution.isPossible(""a"", ""b""), ""Single character non-matching"");
+    }
+
+    @Test
+    void testNegativeCases() {
+        assertFalse(solution.isPossible(""abcd"", ""abc""), ""s longer than t should return false"");
+    }
+
+    @Test
+    void testSpecialCases() {
+        assertTrue(solution.isPossible(""ace"", ""abcde""), ""Non-consecutive subsequence"");
+        assertFalse(solution.isPossible(""aec"", ""abcde""), ""Characters not in order"");
+    }
+
+    @Test
+    void testIdenticalStrings() {
+        assertTrue(solution.isPossible(""abc"", ""abc""), ""Identical strings should return true"");
+    }
+
+    @Test
+    void testLongStrings() {
+        assertTrue(solution.isPossible(""longstringtest"", ""longrandomstringtestforcheck""), ""Long strings positive"");
+        assertFalse(solution.isPossible(""longstringtest"", ""short""), ""Long s with short t should return false"");
+    }
+}","vnb_2003"

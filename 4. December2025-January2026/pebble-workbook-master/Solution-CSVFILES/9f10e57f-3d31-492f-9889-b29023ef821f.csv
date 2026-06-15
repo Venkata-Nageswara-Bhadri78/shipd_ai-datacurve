@@ -1,0 +1,192 @@
+"id","language","prompt","solution","test"
+"9f10e57f-3d31-492f-9889-b29023ef821f","java","
+
+```java
+import java.util.*;
+
+class  Solution{
+    /**
+		PROBLEM DESCRIPTION
+        A courier service is planning to deliver parcels to n different offices located in a business district.  
+        The offices are connected by n - 1 pathways, represented by the array path[][], where each element (i, j) indicates a direct pathway between office i and office j.  
+        The delivery schedule is given by an array delivery_plan[], consisting of m routes. 
+        Each route is represented by two integers, start_office and end_office, meaning the courier will travel between these offices, delivering parcels to every office visited along the way.  
+
+        Find how many parcels each office receives after all deliveries in the schedule are completed.  
+
+        Note: 
+        - The business district is fully connected, forming a tree structure with exactly n - 1 pathways (an acyclic graph).  
+
+     *
+     * CONSTRAINTS:
+     * - 1 <= n, m <= 10^5
+       - path.length() = n - 1
+       - 1 <= path[i][j], delivery_plan[i][j] <= n
+     * Example 1:
+     *  Input:
+        n = 5, m = 3  
+        paths = [[1, 2], [1, 3], [3, 4], [3, 5]]  
+        deliveryPlan = [[1, 3], [2, 5], [1, 4]]  
+
+        Output:
+        [3, 1, 3, 1, 1]
+        Explanation:
+        - The courier travels from office 1 to office 3, visiting offices [1, 3].
+        - The courier travels from office 2 to office 5, visiting offices [1, 2, 3, 5].
+        - The courier travels from office 1 to office 4, visiting offices [1, 3, 4].
+        Therefore, office 1 receives parcels 3 times, office 2 receives parcels 1 time, office 3 receives parcels 3 times, and offices 4 and 5 each receive parcels 1 time.
+     *
+     * Example 2:
+        Input:
+        n = 6, m = 2   
+        path = [[1, 2], [1, 3], [2, 4], [2, 5], [3, 6]]   
+        delivery_plan = [[1, 4], [5, 6]]  
+
+        Output:
+        [2, 2, 1, 1, 1, 1]
+
+        Explanation:
+        - In the first route, the courier travels from office 1 to office 4, visiting offices [1, 2, 4]. Offices 1, 2, and 4 receive parcels(marked as already deliveried).
+        - In the second route, the courier travels from office 5 to office 6, visiting offices [5, 2, 3, 6]. Offices 5, 2, 3, and 6 receive parcels.
+        - Therefore, office 1 is visited 2 times, office 2 is visited 2 times, office 3 is visited 1 time, and offices 4, 5, and 6 are each visited 1 time.
+    */
+    
+    public ArrayList<Integer> findParcelDeliveryCount(int n, int m, int[][] path, int[][] delivery_plan){
+    
+    }
+}
+```","
+
+import java.util.*;
+class Solution {
+
+    public static ArrayList<Integer> findParcelDeliveryCount(int n, int m, int[][] path, int[][] delivery_plan){
+    	List<Integer>[] tree_graph = new ArrayList[n+1];
+    	
+    	for(int i=1 ; i<=n ; i++){
+    		tree_graph[i] = new ArrayList<>();
+    	}
+    	
+    	for(int[] i : path){
+    		int x = i[0];
+    		int y = i[1];
+    		tree_graph[x].add(y);
+    		tree_graph[y].add(x);
+    	}
+    	
+    	int[] root = new int[n + 1];
+    	int[] tree_depth = new int[n+1];
+    	
+    	boolean[] already_deliveried = new boolean[n+1];
+    	
+    	depthFirstSearch(1, tree_graph, already_deliveried, root, tree_depth);
+    	
+		if (delivery_plan == null || delivery_plan.length == 0) {
+			return new ArrayList<>();
+		}
+
+    	int[] packages = new int[n+1];
+    	
+    	for(int[] i : delivery_plan){
+    		int start_office = i[0];
+    		int end_office = i[1];
+    		
+
+			if (start_office < 1 || start_office > n || end_office < 1 || end_office > n) {
+				throw new IllegalArgumentException(""Invalid chakra zone indices: "" + start_office + "", "" + end_office);
+			}
+
+			
+    		while(tree_depth[start_office] > tree_depth[end_office]){
+    			packages[start_office]++;
+    			start_office = root[start_office];
+    		}
+    		
+    		while(tree_depth[end_office] > tree_depth[start_office]){
+    			packages[end_office]++;
+    			end_office = root[end_office];
+    		}
+    		
+    		while(start_office != end_office){
+    			packages[start_office]++;
+    			packages[end_office]++;
+    			start_office = root[start_office];
+    			end_office = root[end_office];
+    		}
+    		
+    		packages[start_office]++;
+    	}
+    	
+    	ArrayList<Integer> answer = new ArrayList<>();
+    	for(int i=1 ; i<=n ; i++){
+    		answer.add(packages[i]);
+    	}
+    	
+    	return answer;
+    }
+    
+    public static void depthFirstSearch(int node, List<Integer>[] tree_graph, boolean[] already_deliveried, int[] parent, int[] tree_depth){
+    	already_deliveried[node] = true;
+    	
+    	for(int i : tree_graph[node]){
+    		if(!already_deliveried[i]){
+    			parent[i] = node;
+    			tree_depth[i] = tree_depth[node] + 1;
+    			depthFirstSearch(i, tree_graph, already_deliveried, parent, tree_depth);
+    		}
+    	}
+    }
+}","import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
+
+class Test {
+    private final Solution solution = new Solution();
+
+    @Test
+    public void testWithNoDeliveryPlan() {
+        int n = 5, m = 3;
+        int[][] path = {{1, 2}, {1, 3}, {3, 4}, {3, 5}};
+        int[][] delivery_plan = {};
+        List<Integer> expected = new ArrayList<>();
+        assertEquals(expected, solution.findParcelDeliveryCount(n, m, path, delivery_plan));
+    }
+
+    @Test
+    public void testSingleOfficeNoDeliveries() {
+        int n = 1, m = 0;
+        int[][] path = {};  // No paths since there's only one office
+        int[][] delivery_plan = {};
+        List<Integer> expected = new ArrayList<>();
+        assertEquals(expected, solution.findParcelDeliveryCount(n, m, path, delivery_plan));
+    }
+
+    @Test
+    public void testDisconnectedOffices() {
+        int n = 4, m = 2;
+        int[][] path = {};  // No paths, all offices are disconnected
+        int[][] delivery_plan = {{1, 4}, {2, 3}};
+        List<Integer> expected = Arrays.asList(1, 1, 1, 1); // Each office receives one parcel
+        assertEquals(expected, solution.findParcelDeliveryCount(n, m, path, delivery_plan));
+    }
+
+    @Test
+    public void testInvalidChakraZoneIndices() {
+        int n = 5, m = 3;
+        int[][] path = {{1, 2}, {1, 3}, {3, 4}, {3, 5}};
+        int[][] delivery_plan = {{1, 3}, {2, 5}, {1, 4}};
+        assertThrows(IllegalArgumentException.class, () -> {
+            solution.findParcelDeliveryCount(n, m, path, new int[][]{{-1, 5}});
+        }, "Invalid chakra zone indices");
+    }
+
+    @Test
+    public void testCyclicGraph() {
+        int n = 4, m = 2;
+        int[][] path = {{1, 2}, {2, 3}, {3, 4}, {4, 1}};  // Creating a cycle
+        int[][] delivery_plan = {{1, 3}};
+        List<Integer> expected = Arrays.asList(1, 1, 1, 0);
+        assertEquals(expected, solution.findParcelDeliveryCount(n, m, path, delivery_plan));
+    }
+}"

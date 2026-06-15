@@ -1,0 +1,145 @@
+BATTLE GROUND MOBILE INDIA:
+
+Scenario: Krafton Organisation is trying to add a new match in Battle Ground Mobile India(BGMI). The conditions of the game is like below: 
+N Number of players (say N - user input) are standing in a straight line one after another. Each player is holding a gun (gun of every player is same type) and have variable health(user input). Assume that the Bullet can travel any distance in 1 sec. All bullets of i^(th) player have same power. You are given an array named bulletPower[i] represents the power of every bullet of i^(th) player.
+
+Initially when time starts (i.e time = 0) every player fires 1 bullet per 1 sec in RIGHT direction.
+Here is an another condition:
+If any player j is hit by i^(th) player then -> j's health is decreased by bulletPower[i] (bullet power of i^(th) player). If health of any player becomes <=1 (0 or less) then the player eliminates from the game sharp at that time.
+The eliminated player vanishes from his position and next right player (if present) becomes the neighbour of previous player..
+Given the health and bulletPower of each player. You need to return minimum time in which N-1 players will eliminates from game (Since elimination of player 1 is impossible).
+
+Input Format:
+N : integer    : number of players
+health : int[] : health of N players
+power  : int[] : power of N player's bullet
+
+Output Format:
+Minimum Time : Integer
+
+
+
+Contraints:
+
+1<=N<=10^5
+1<=health[i]<=10^9 where i = [0, N]
+1<=bulletPower[i] <= 10^9 where i = [0, N]
+
+
+
+TEST CASES :
+
+Testcase 1:
+
+input 1:
+N = 3
+health : [1, 2, 1]
+bulletPower  : [2, 1, 3]
+
+Output 1: 1
+
+Explanation:
+
+At time t=0 : All the players fires 1 bullet from their gun : Health : [1, 0, 0]
+At time t=1 : Player 2 and 3 eliminates since health[2nd player]<1 and health[3rd player]<1
+			  health = [1] 
+So until time t=1 : N-1 = 2 players got eliminated and only one player is presented
+Hence the output is 1.
+
+Testcase 2:
+
+Input 2:
+N = 4
+health = [4, 5, 2, 6]
+bulletPower = [1, 3, 2, 3]
+
+Output 2: 5
+
+Explanation
+At time t=0 : health : [4, 5, 2, 6] and bulletPower : [1, 3, 2, 3]
+At time t=1 : (all players fire 1 bullet) health = [4, 4, -1, 4] (player 3 got eliminated)
+			  health : [4, 4, 4] and bulletPower : [1, 3, 3]
+At time t=2 : (Now another bullet is fired) health = [4, 3, 1] (No one got Eliminated)
+			  health : [4, 3, 1] and bulletPower : [1, 3, 3]  
+At time t=3 : (Another bullet is fired) health = [4, 2, -2] (player 3 got eliminated)
+			   health = [4, 2] and bulletPower = {1, 3}
+At time t=4 : (Another bullet is fired) health = [4, 1]
+			   health = [4, 1] bulletPower = {1, 3} (No one got eliminated)
+At time t=5 : (Another bullet is fired) health =[4, 0]
+			   health = [4] (All N-1 = 4-1 = 3 players got eliminated) and (only 1 player is present)
+Hence the final answer is 5
+
+Testcase 3:
+
+Input 3:
+N = 5
+health = [2, 2, 2]
+bulletPower  [5, 5, 5]
+
+Explanation : 
+At time t=0 : health = [2, 2, 2] and bulletPower = [5, 5, 5]
+At time t=1 : health = [2, -3, -3] Now player 2, 3 got eliminated
+		      health = [2]
+Final answer : 1
+
+Contraints:
+
+1<=N<=10^5
+1<=health[i]<=10^9 where i = [0, N]
+1<=bulletPower[i] <= 10^9 where i = [0, N]
+
+
+
+
+//Efficient Code Approach
+import java.util.*;
+
+public class Main{
+    public static void main(String args[]){
+        Scanner scan = new Scanner(System.in);
+        int size = scan.nextInt();
+        int[] health = new int[size];
+        int[] power = new int[size];
+        //health Array
+        for(int i=0 ; i<size ; i++){
+            health[i] = scan.nextInt();
+        }
+        for(int i=0 ; i<size ; i++){
+            power[i] = scan.nextInt();
+        }
+        int result = minimumTime(size, health, power);
+        System.out.println(result);
+    }
+    public static int minimumTime(int N, int health[], int[] power) {
+	    Deque<int[]> dq = new ArrayDeque<>();
+	    int answer = 1 + (health[1]-1)/power[0];
+	    int[] a = {power[0], answer};
+	    dq.push(a);
+	    for(int i=1 ; i<N ; i++) {
+		    int currTime = 0;
+		    while(true) {
+	    		if(dq.isEmpty()) {
+    				currTime += 1 + (health[i]-1)/power[0];
+	    			dq.push(new int[] {power[i], currTime});
+				    answer = Math.max(answer, currTime);
+			    	break;
+		    	}
+	    		int[] array = dq.pop();
+    			int time = 1 + (health[i]-1)/array[0];
+			    if(time <= array[1]) {
+			    	if(array[1]-time>0) {
+		    			dq.push(new int[] {array[0], (array[1]-time)});
+	    			}
+    				dq.push(new int[] {power[i], currTime+time});
+				    answer = Math.max(answer, currTime+time);
+			    	break;
+		    	}
+	    		else {
+    				currTime += array[1];
+				    health[i] -= array[0]*array[1];
+			    }
+		    }
+	    }
+	    return answer;
+    }
+}

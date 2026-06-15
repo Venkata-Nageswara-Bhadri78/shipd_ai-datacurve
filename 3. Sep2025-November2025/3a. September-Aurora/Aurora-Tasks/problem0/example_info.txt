@@ -1,0 +1,64 @@
+In the resource-constrained environment of logistics, a global delivery company needs a system to compute cost- and time-minimizing delivery routes based on the Traveling Salesman Problem (TSP). To make the problem testable and deterministic, implement a specific heuristic:
+1. Use Nearest Neighbor heuristic (starting at start_node) to construct the route.
+2. Break ties by choosing the smallest node ID.
+3. Output the route order, total cost, total time, and a boolean flag verifying it forms a valid Hamiltonian cycle.
+
+Your implementation must define:
+1. A class IncrementalTSPSolver with:
+
+Constructor: __init__(graph: nx.Graph, start_node: int)
+Method: solve() -> Tuple[List[int], Dict[str, Any]] that returns the route and metrics.
+
+A wrapper function:
+
+optimize_delivery_routes(graph: nx.Graph, start_node: int) -> Tuple[List[int], Dict[str, Any]] that:
+
+Raises errors on invalid input
+Instantiates and calls IncrementalTSPSolver.solve()
+
+Returns its result.
+
+Constraints
+Graph size: max 500 nodes and 2000 edges (to reflect realistic implementation bounds for this heuristic)
+Must use less than O(V log V) extra memory for additional structures beyond the graph.
+
+Handle errors explicitly:
+ValueError("Graph is not fully connected") if the graph is disconnected.
+ValueError("Negative edge weight detected") if any edge has negative costs or times.
+ValueError("Start node does not exist in the graph") if invalid start node.
+Floating point values in output metrics must be rounded to one decimal place exactly.
+
+class IncrementalTSPSolver:
+    def __init__(self, graph: nx.Graph, start_node: int):
+        pass
+    def solve(self) -> Tuple[List[int], Dict[str, Any]]:
+        pass
+
+def optimize_delivery_routes(graph: nx.Graph, start_node: int) -> Tuple[List[int], Dict[str, Any]]:
+    pass
+
+Sample Input/Output
+Input:
+G = nx.Graph()
+edges = [
+    (0, 1, {"cost": 10, "time": 5}),
+    (1, 2, {"cost": 15, "time": 7}),
+    (2, 0, {"cost": 20, "time": 10}),
+    (0, 3, {"cost": 5, "time": 2}),
+    (3, 2, {"cost": 8, "time": 4}),
+    (1, 3, {"cost": 12, "time": 6}),
+]
+G.add_edges_from(edges)
+start_node = 0
+
+Output:
+(
+    [0, 3, 2, 1, 0],
+    {
+        "total_cost": 38.0,
+        "total_time": 18.0,
+        "is_valid": True
+    }
+)
+
+

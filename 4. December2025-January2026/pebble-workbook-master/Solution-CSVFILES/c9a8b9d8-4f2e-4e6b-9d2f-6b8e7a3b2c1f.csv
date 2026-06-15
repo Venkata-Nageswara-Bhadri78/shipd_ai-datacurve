@@ -1,0 +1,162 @@
+"id","language","prompt","solution","test"
+"c9a8b9d8-4f2e-4e6b-9d2f-6b8e7a3b2c1f","python","```py
+from typing import List
+
+def find_winner(n: int, spaceship_a: list[int], spaceship_b: list[int], spaceship_c: list[int]) -> int:
+    """
+    SPACE RACE COMPETITION
+
+    DESCRIPTION:
+
+    You are managing a thrilling space exploration competition involving 3 spaceships: Spaceship A, Spaceship B, and Spaceship C. Each spaceship has N crew members, and each crew member has a specific skill level.
+    The race rules are as below:
+    In each round, the first available crew member (the next crew member who hasn't been retired) from each spaceship is selected for the mission. The crew member with the highest skill level wins the mission and advances to the next round. The two losing crew members are retired and no longer participate in future missions. After each mission, the winner competes against the next available crew members from the two losing spaceships.
+    If multiple crew members have the same skill level in a mission, priority is given to the crew member from the spaceship with the lowest alphabetical order (Spaceship A is prioritized over Spaceship B, and Spaceship B is prioritized over Spaceship C).
+    Note: A spaceship is disqualified/loss from the race if all its crew members have been retired.
+    The competition continues until only one spaceship has crew members left.
+    The competition continues until only one spaceship is left with few crew member left. Your task is to find which spaceship will win the competition.
+
+    Note: 
+    If spaceship A wins the competition return 0.
+    If B wins return 1 and if C wins return 2.
+    Here is an example scenario for better understanding the problem,
+
+    Your aim is to complete the function find_winner(), which FINDS AND RETURN who is the winner of the competition.
+
+    Example scenario:
+    Input: N = 3
+    A = [7, 5, 3]
+    B = [4, 8, 1]
+    C = [6, 2, 9]
+    Output: 2
+    Explanation:
+    Mission 1: Spaceship A crew with skill 7, Spaceship B crew with skill 4, Spaceship C crew with skill 6. Spaceship A wins (skill = 7).
+    Mission 2: Spaceship A crew with skill 7, Spaceship B crew with skill 8, Spaceship C crew with skill 2. Spaceship B wins (skill = 8).
+    Mission 3: Spaceship A crew with skill 5, Spaceship B crew with skill 8, Spaceship C crew with skill 9. Spaceship C wins (skill = 9).
+    Mission 4: Spaceship A crew with skill 3, Spaceship B crew with skill 1, Spaceship C crew with skill 9. Spaceship C wins (skill = 9).
+    After 4 missions, Spaceships A and B are disqualified, leaving Spaceship C as the winner. Output is 2.
+    """
+	pass
+```","def findWinner(N : int, X: List[int], Y: List[int], Z: List[int]) -> int:
+    player_x = 0
+    player_y = 0
+    player_z = 0
+
+    while True:
+        if player_y >= N:
+            if X[player_x] >= Z[player_z]:
+                player_z += 1
+                if player_z >= N:
+                    return 0
+            else:
+                player_x += 1
+                if player_x >= N:
+                    return 2
+        elif player_z >= N:
+            if X[player_x] >= Y[player_y]:
+                player_y += 1
+                if player_y >= N:
+                    return 0
+            else:
+                player_x += 1
+                if player_x >= N:
+                    return 1
+        elif player_x >= N:
+            if Y[player_y] >= Z[player_z]:
+                player_z += 1
+                if player_z >= N:
+                    return 1
+            else:
+                player_y += 1
+                if player_y >= N:
+                    return 2
+        else:
+            if X[player_x] >= Y[player_y] and X[player_x] >= Z[player_z]:
+                player_y += 1
+                player_z += 1
+                if player_y >= N and player_z >= N:
+                    return 0
+            elif Y[player_y] >= Z[player_z]:
+                player_x += 1
+                player_z += 1
+                if player_x >= N and player_z >= N:
+                    return 1
+            else:
+                player_x += 1
+                player_y += 1
+                if player_x >= N and player_y >= N:
+                    return 2","import pytest
+from solution import findWinner
+
+def test_basic_tie():
+    N = 3
+    A = [1, 2, 3]
+    B = [3, 2, 1]
+    C = [2, 1, 3]
+    result = findWinner(N, A, B, C)
+    assert result == 0  # All players tie
+
+def test_distinct_winner():
+    N = 3
+    A = [3, 2, 1]
+    B = [2, 1, 3]
+    C = [1, 3, 2]
+    result = findWinner(N, A, B, C)
+    assert result == 0  # Player X wins
+
+def test_min_input_size():
+    N = 1
+    A = [5]
+    B = [4]
+    C = [3]
+    result = findWinner(N, A, B, C)
+    assert result == 0  # Only one round, Player X wins
+
+def test_large_numbers():
+    N = 3
+    A = [1000000, 999999, 1000001]
+    B = [999999, 1000001, 1000000]
+    C = [1000001, 1000000, 999999]
+    result = findWinner(N, A, B, C)
+    assert result == 0  # Player X wins with large numbers
+
+def test_all_zero_scores():
+    N = 3
+    A = [0, 0, 0]
+    B = [0, 0, 0]
+    C = [0, 0, 0]
+    result = findWinner(N, A, B, C)
+    assert result == 0  # All players tie with zero scores
+
+
+def test_multiple_ties():
+    N = 3
+    A = [2, 2, 2]
+    B = [2, 2, 2]
+    C = [2, 2, 2]
+    result = findWinner(N, A, B, C)
+    assert result == 0  # All players tie
+
+def test_descending_order():
+    N = 3
+    A = [3, 2, 1]
+    B = [3, 2, 1]
+    C = [3, 2, 1]
+    result = findWinner(N, A, B, C)
+    assert result == 0  
+
+def test_large_input_size():
+    N = 1000
+    A = [i for i in range(1000, 0, -1)]
+    B = [i for i in range(999, -1, -1)]
+    C = [i for i in range(998, -2, -1)]
+    result = findWinner(N, A, B, C)
+    assert result == 0  
+
+def test_one_distinct_score():
+    N = 3
+    A = [1, 1, 1]
+    B = [1, 1, 1]
+    C = [1, 1, 2]
+    result = findWinner(N, A, B, C)
+    assert result == 2","vnb_2003"

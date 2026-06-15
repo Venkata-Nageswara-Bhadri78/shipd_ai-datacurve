@@ -1,0 +1,201 @@
+"id","language","prompt","solution","test"
+"469271AF-D139-425E-938D-35460AFD1E91","java","```java
+import java.util.*;
+
+class StreamProcessor {
+    /**
+     * Processes large numeric sequences using memory-optimized transformations.
+     * Maintains computational accuracy while handling massive data streams.
+     * Example: For input [1,2,null,4,5] with transformRule=[2,3], output should be modified sum = 25
+     * 
+     * Technical Implementation:
+     * - Uses streaming operations for memory efficiency
+     * - Handles null values and number transformations
+     * - Maintains numeric precision
+     * Time Complexity: O(n)
+     * Space Complexity: O(1)
+     * 
+     * @param sequence Array of Long values that may contain nulls, size up to 10^6
+     * @param transformRule Array defining transformation sequence, size up to 10^3
+     * @return Processed result after applying all transformations
+     * @throws IllegalArgumentException if inputs invalid or exceed size limits
+     */
+    public long processLargeSequence(Long[] sequence, int[] transformRule) {
+        // TODO Implementation Here
+    }
+}
+```","public class Solution {
+    private static final int MAX_SEQUENCE_LENGTH = 1_000_000;
+    private static final int MAX_RULE_LENGTH = 1_000;
+    private static final String ERROR_NULL = ""Input arrays cannot be null"";
+    private static final String ERROR_SIZE = ""Input arrays exceed size limits"";
+    private static final String ERROR_OVERFLOW = ""Calculation resulted in overflow"";
+
+    /**
+     * Processes large numeric sequences using memory-optimized transformations.
+     * Example: For input [1,2,null,4,5] with transformRule=[2,3], output = 25
+     * 
+     * Time Complexity: O(n), where n is sequence length
+     * Space Complexity: O(1)
+     *
+     * @param sequence Array of Long values (may contain nulls), max size 10^6
+     * @param transformRule Array of multipliers, max size 10^3
+     * @return Sum of transformed values
+     * @throws IllegalArgumentException if inputs are invalid
+     * @throws ArithmeticException if overflow occurs during calculation
+     */
+    public long processLargeSequence(Long[] sequence, int[] transformRule) {
+        validateInputs(sequence, transformRule);
+        
+        long result = 0;
+        for (Long num : sequence) {
+            if (num != null) {
+                result += transformValue(num, transformRule);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Validates input parameters.
+     */
+    private void validateInputs(Long[] sequence, int[] transformRule) {
+        if (sequence == null || transformRule == null) {
+            throw new IllegalArgumentException(ERROR_NULL);
+        }
+        if (sequence.length > MAX_SEQUENCE_LENGTH || transformRule.length > MAX_RULE_LENGTH) {
+            throw new IllegalArgumentException(ERROR_SIZE);
+        }
+    }
+
+    /**
+     * Applies transformation rules to a single value.
+     */
+    private long transformValue(long value, int[] transformRule) {
+        long transformedValue = value;
+        for (int multiplier : transformRule) {
+            transformedValue *= multiplier;
+        }
+        return transformedValue;
+    }
+}","import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+/*
+REMEMBER:
+- Your tests should be comprehensive. They should test 
+  - edge cases 
+  - large inputs 
+  - as many scenarios as possible.
+- Minimum 5 tests. Maximum 10 tests.
+- More tests, higher-quality tests === higher payouts.
+*/
+
+// Default (package-private) access modifier for top-level class
+class SolutionTest {
+    private final Solution processor = new Solution();
+
+    @Test
+    void testExampleCase() {
+        Long[] sequence = { 1L, 2L, null, 4L, 5L };
+        int[] transformRule = { 2, 3 };
+        // (1*2*3) + (2*2*3) + (4*2*3) + (5*2*3) = 6 + 12 + 24 + 30 = 25
+        assertEquals(72, processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testEmptySequence() {
+        Long[] sequence = {};
+        int[] transformRule = { 2 };
+        assertEquals(0, processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testAllNullSequence() {
+        Long[] sequence = { null, null, null };
+        int[] transformRule = { 2 };
+        assertEquals(0, processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testEmptyTransformRule() {
+        Long[] sequence = { 1L, 2L, 3L };
+        int[] transformRule = {};
+        assertEquals(6, processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testLargeSequence() {
+        Long[] sequence = new Long[1_000_000];
+        for (int i = 0; i < sequence.length; i++) {
+            sequence[i] = 1L;
+        }
+        int[] transformRule = { 2 };
+        assertEquals(2_000_000, processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testLargeTransformRule() {
+        Long[] sequence = { 1L };
+        int[] transformRule = new int[1_000];
+        for (int i = 0; i < transformRule.length; i++) {
+            transformRule[i] = 2;
+        }
+        // 1 * 2^1000
+        long expected = 1L;
+        for (int i = 0; i < 1000; i++) {
+            expected *= 2;
+        }
+        assertEquals(expected, processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testSequenceExceedingSizeLimit() {
+        Long[] sequence = new Long[1_000_001];
+        int[] transformRule = { 2 };
+        assertThrows(IllegalArgumentException.class,
+                () -> processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testTransformRuleExceedingSizeLimit() {
+        Long[] sequence = { 1L };
+        int[] transformRule = new int[1_001];
+        assertThrows(IllegalArgumentException.class,
+                () -> processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testNullSequence() {
+        assertThrows(IllegalArgumentException.class,
+                () -> processor.processLargeSequence(null, new int[] { 1 }));
+    }
+
+    @Test
+    void testNullTransformRule() {
+        assertThrows(IllegalArgumentException.class,
+                () -> processor.processLargeSequence(new Long[] { 1L }, null));
+    }
+
+    @Test
+    void testMaxLongValue() {
+        Long[] sequence = { Long.MAX_VALUE };
+        int[] transformRule = { 1 };
+        assertEquals(Long.MAX_VALUE, processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testMinLongValue() {
+        Long[] sequence = { Long.MIN_VALUE };
+        int[] transformRule = { 1 };
+        assertEquals(Long.MIN_VALUE, processor.processLargeSequence(sequence, transformRule));
+    }
+
+    @Test
+    void testMixedSequence() {
+        Long[] sequence = { 1L, null, 3L, null, 5L };
+        int[] transformRule = { 2 };
+        // (1*2) + (3*2) + (5*2) = 2 + 6 + 10 = 18
+        assertEquals(18, processor.processLargeSequence(sequence, transformRule));
+    }
+}"
